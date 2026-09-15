@@ -1,0 +1,27 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install MinGW
+        run: |
+          choco install mingw -y
+
+      - name: Build EXE
+        shell: cmd
+        run: |
+          g++ main.cpp -o KeyStatus.exe -mwindows -municode -static -static-libgcc -static-libstdc++
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyStatus-Windows
+          path: KeyStatus.exe
